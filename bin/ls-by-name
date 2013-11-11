@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo -n "["
+l=""
+env ls "$1" | sort | while read file; do
+    echo -n $l
+    echo -n '{"name":"'"$file"'", "link":"'$(readlink "$1/$file")'"}'
+    l=","
+done   
+echo -n "]"

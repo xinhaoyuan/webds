@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title></title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="zepto.min.js"></script>
+    <script type="text/javascript" src="webds.js"></script>
+    <link href="webds.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div style="position: absolute; top: 10px; left: 10px; width: 300px; height: 500px;
+                background: rgba(0, 0, 0, 0.5); color: white;
+                padding: 8px; border-radius: 10px;">
+      <table width="100%" height="100%">
+        <tr height="0"><td>
+            <table width="100%">
+              <tr><td width="100%" style="position: relative; text-align: left">
+                  <div style="position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+                              border-radius: 5px; background: rgba(255, 255, 255, 0.7);
+                              padding: 3px;">
+                    <div class="selectable single-line" contenteditable="true" 
+                         style="width: 100%; overflow: hidden; 
+                                background: transparent; color: black; border: 0;
+                                vertical-align: center; outline: 0;"></div>
+                  </div>
+              </td><td width="0" style="text-align: right; white-space: nowrap;">
+                  <div class="button" onclick="di.change_sort_method()">
+                    sort:<span id="di-sort-by">date</span>
+                  </div><div class="button" onclick="di.update()">update</div>
+              </td></tr>
+            </table>
+        </td></tr><tr><td height="100%" style="position: relative;">
+            <div style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px;
+                        overflow-x: hidden; overflow-y: auto"
+                 id="di-list">
+            </div>
+        </td></tr>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,81 @@
+body {
+    display: block;
+    padding: 0px;
+    margin: 0px;
+    font-size: 10pt;
+    font-family: consolas, monospace;
+    text-align: left;
+    background: transparent;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.selectable {
+    -webkit-touch-callout: text;
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+[contenteditable="true"].single-line {
+    white-space: nowrap;
+    width:200px;
+    overflow: hidden;
+}
+
+[contenteditable="true"].single-line br {
+    display:none;
+}
+
+[contenteditable="true"].single-line p {
+    display:none;
+}
+
+
+[contenteditable="true"].single-line * {
+    display:inline;
+    white-space:nowrap;
+}
+
+table {
+    border: 0;
+}
+
+td {
+    padding:0; margin:0;
+}
+
+div.button {
+    display: inline-block;
+    cursor: pointer;
+    background: transparent;
+    padding: 3px;
+    border-radius: 5px;
+    margin: 0px;
+}
+
+div.button:hover {
+    background: rgba(255,255,255, 0.8);
+    color: black;
+}
+
+#di-list > div {
+    padding: 2px;
+    margin-bottom: 2px;
+    color: white;
+    background: transparent;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+#di-list > div:hover {
+    border-bottom: 1px dotted white;
+    margin-bottom: 1px;
+}

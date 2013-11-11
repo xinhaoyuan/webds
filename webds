@@ -1,0 +1,26 @@
+#!/bin/bash
+
+local_path=`cd $(dirname $0); pwd`
+export WEBDS_HOME=${local_path}/webds-local/html/webds.html
+export WEBDS_PATH=${local_path}/webds-local
+export WEBDS_DESKTOP_PATH=$HOME/.links
+export LD_LIBRARY_PATH="${local_path}/webds-local/:${LD_LIBRARY_PATH}"
+
+WD=`cd $(dirname $0); pwd`
+LOCK_DIR="/tmp/.webds.lock"
+
+while ! mkdir $LOCK_DIR 2>/dev/null; do
+    while [ ! -e $LOCK_DIR/pid -a -d $LOCK_DIR ]; do sleep .5; done
+    _PID=`cat $LOCK_DIR/pid 2>/dev/null`
+    [ -n "$_PID" ] && kill $_PID 2>/dev/null
+done
+
+if [ "$1" = "exit" ]; then rmdir ${LOCK_DIR}; exit 0; fi
+
+(
+    ${local_path}/webds-local/main &
+    _PID=$!
+    echo $_PID > $LOCK_DIR/pid
+    trap 'rm -rf "$LOCK_DIR"' 0
+    wait $_PID 2>/dev/null
+) &

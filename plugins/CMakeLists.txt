@@ -1,0 +1,1 @@
+ADD_SUBDIRECTORY(plugin-cmd)

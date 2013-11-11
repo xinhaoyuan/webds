@@ -1,0 +1,15 @@
+webDS is an attempt to construct Desktop Shell based on web technology
+(HTML/CSS/JS). More specifically, it contains a desktop manager and a
+launcher, which are all implemented in HTML, and executed in webkit
+containers. Moreover, it contains a native plugin interface to allow
+easy extension.
+
+BUILD
+
+webDS utilize CMAKE to build. Out-of-source build is strongly recommended.
+
+sc.mk is provided to make building and packaging easier: simply type
+
+      make -f sc.mk rebuild
+
+in the project directory to build all stuffs into the "build" dir.
