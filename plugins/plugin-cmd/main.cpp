@@ -235,15 +235,15 @@ js_cb_cmd_output(JSContextRef context,
                  const JSValueRef argv[],
                  JSValueRef* exception)
 {
-    if (argc != 3)
+    if (argc != 4)
         return JSValueMakeNull(context);
-    if (!JSValueIsString(context, argv[2]))
+    if (!JSValueIsString(context, argv[3]))
         return JSValueMakeNull(context);
 
-    int len = JSValueToNumber(context, argv[0], NULL);
-    JSObjectRef arr = JSValueToObject(context, argv[1], NULL);
+    int len = JSValueToNumber(context, argv[1], NULL);
+    JSObjectRef arr = JSValueToObject(context, argv[2], NULL);
     string input;
-    copy_from_jsstring_object(context, argv[2], input);
+    copy_from_jsstring_object(context, argv[3], input);
    
 
     if (len == 0) return JSValueMakeNull(context);
@@ -280,11 +280,11 @@ js_cb_cmd(JSContextRef context,
           const JSValueRef argv[],
           JSValueRef* exception)
 {
-    if (argc != 2)
+    if (argc != 3)
         return JSValueMakeNull(context);
 
-    int len = JSValueToNumber(context, argv[0], NULL);
-    JSObjectRef arr = JSValueToObject(context, argv[1], NULL);
+    int len = JSValueToNumber(context, argv[1], NULL);
+    JSObjectRef arr = JSValueToObject(context, argv[2], NULL);
 
     if (len == 0) return JSValueMakeNull(context);
     vector<string> args;
@@ -316,8 +316,8 @@ extern "C" {
     {
         host = host_interface;
         
-        host->register_native_method("CmdOutput", js_cb_cmd_output);
-        host->register_native_method("Cmd", js_cb_cmd);
+        host->register_native_method("cmd_output", js_cb_cmd_output);
+        host->register_native_method("cmd", js_cb_cmd);
         
         return &plugin;
     }
