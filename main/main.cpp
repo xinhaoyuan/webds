@@ -20,6 +20,7 @@
 #include "util.hpp"
 #include "webds_webkit.hpp"
 #include "webds_desktop.hpp"
+#include "webds_launcher.hpp"
 
 using namespace std;
 
@@ -231,27 +232,32 @@ js_cb_exit(JSContextRef context,
     return JSValueMakeNull(context);
 }
 
+static void get_path_uri(const string &path, string &uri) {
+    /* Load home page */
+    char *cwd = g_get_current_dir();
+    char *abs_path = (path.c_str()[0] == '/') ?
+        g_build_filename(path.c_str(), NULL) :
+        g_build_filename(cwd, path.c_str(), NULL);
+    char *uri_c_str = g_filename_to_uri(abs_path, NULL, NULL);
+
+    uri = uri_c_str;
+
+    g_free(cwd);
+    g_free(abs_path);
+    g_free(uri_c_str);
+}
+
 int
 main(int argc, char* argv[]) {
     signal(SIGCHLD, SIG_IGN);
     
     gtk_init(&argc, &argv);
 
-    string start_uri;
+    string desktop_start_uri, launcher_start_uri;
 
     /* Load home page */
-    char __empty[] = "";
-    char *home = getenv("WEBDS_HOME");
-    if (home == NULL) home = __empty;
-    char *cwd = g_get_current_dir();
-    char *path = home[0] == '/' ? home : g_build_filename(cwd, getenv("WEBDS_HOME"), NULL);
-    char *start = g_filename_to_uri(path, NULL, NULL);
-
-    start_uri = start;
-
-    g_free(cwd);
-    if (path != home) g_free(path);
-    g_free(start);
+    get_path_uri(getenv("WEBDS_DESKTOP_PAGE"), desktop_start_uri);
+    get_path_uri(getenv("WEBDS_LAUNCHER_PAGE"), launcher_start_uri);
 
     WebDSWebKit::add_native_func("load_plugin", js_cb_load_plugin);
     WebDSWebKit::add_native_func("show_window", js_cb_show_window);
@@ -260,7 +266,8 @@ main(int argc, char* argv[]) {
     WebDSWebKit::add_native_func("get_env", js_cb_get_env);
     WebDSWebKit::add_native_func("exit", js_cb_exit);
     
-    WebDSDesktop *desktop = new WebDSDesktop(start_uri);
+    WebDSDesktop *desktop = new WebDSDesktop(desktop_start_uri);
+    // WebDSLauncher *launcher = new WebDSLauncher(launcher_start_uri);
     
     gtk_main();
     

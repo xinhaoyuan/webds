@@ -1,7 +1,8 @@
 #!/bin/bash
 
 local_path=`cd $(dirname $0); pwd`
-export WEBDS_HOME=${local_path}/webds-local/html/webds.html
+export WEBDS_DESKTOP_PAGE=${local_path}/webds-local/html/desktop.html
+export WEBDS_LAUNCHER_PAGE=${local_path}/webds-local/html/launcher.html
 export WEBDS_PATH=${local_path}/webds-local
 export WEBDS_DESKTOP_PATH=$HOME/.links
 export LD_LIBRARY_PATH="${local_path}/webds-local/:${LD_LIBRARY_PATH}"
