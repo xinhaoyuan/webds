@@ -79,7 +79,8 @@ load_plugin(const char *plugin_name, const char *plugin_file_name)
 
     // no need to lock here
     plugin_interface_map[plugin_name] = interface;
-    fprintf(stderr, "Successed\n");
+    fprintf(stderr, "Finished\n");
+    
     return 0;
 
   failed:
@@ -137,25 +138,28 @@ js_cb_get_env(JSContextRef context,
 }
 
 
-// static JSValueRef
-// js_cb_resize_window(JSContextRef context,
-//                     JSObjectRef function,
-//                     JSObjectRef self,
-//                     size_t argc,
-//                     const JSValueRef argv[],
-//                     JSValueRef* exception)
-// {
-//     if (argc == 2 && JSValueIsNumber(context, argv[0]) && JSValueIsNumber(context, argv[1]))
-//     {
-//         double widthF = JSValueToNumber(context, argv[0], NULL);
-//         double heightF = JSValueToNumber(context, argv[1], NULL);
-//         int width = (int)widthF;
-//         int height = (int)heightF;
-//         fprintf(stderr, "SET SIZE %d %d\n", width, height);
-//         gtk_widget_set_size_request(GTK_WIDGET(container), width, height);
-//     }
-//     return JSValueMakeNull(context);
-// }
+static JSValueRef
+js_cb_resize_window(JSContextRef context,
+                    JSObjectRef function,
+                    JSObjectRef self,
+                    size_t argc,
+                    const JSValueRef argv[],
+                    JSValueRef* exception)
+{
+    WebDSWebKit *wk = (WebDSWebKit *)JSObjectGetPrivate(function);
+    GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(wk->get_webview()));
+    if (toplevel != NULL &&
+        argc == 3 && JSValueIsNumber(context, argv[1]) && JSValueIsNumber(context, argv[2]))
+    {
+        double widthF = JSValueToNumber(context, argv[0], NULL);
+        double heightF = JSValueToNumber(context, argv[1], NULL);
+        int width = (int)widthF;
+        int height = (int)heightF;
+        fprintf(stderr, "SET SIZE %d %d\n", width, height);
+        gtk_widget_set_size_request(toplevel, width, height);
+    }
+    return JSValueMakeNull(context);
+}
 
 // (plugin_name, plugin_file_name)
 static JSValueRef
@@ -178,32 +182,6 @@ js_cb_load_plugin(JSContextRef context,
     }
     return JSValueMakeBoolean(context, false);
 }
-
-// static JSValueRef
-// js_cb_get_desktop_focus(JSContextRef context,
-//                         JSObjectRef function,
-//                         JSObjectRef self,
-//                         size_t argc,
-//                         const JSValueRef argv[],
-//                         JSValueRef* exception)
-// {
-//     gtk_window_present(GTK_WINDOW(main_window));
-//     return JSValueMakeNull(context);
-// }
-
-// static JSValueRef
-// js_cb_toggle_dock(JSContextRef context,
-//                   JSObjectRef function,
-//                   JSObjectRef self,
-//                   size_t argc,
-//                   const JSValueRef argv[],
-//                   JSValueRef* exception)
-// {
-//     if (gtk_window_get_type_hint(GTK_WINDOW(main_window)) == GDK_WINDOW_TYPE_HINT_DOCK)
-//         gtk_window_set_type_hint(GTK_WINDOW(main_window), GDK_WINDOW_TYPE_HINT_DESKTOP);
-//     gtk_window_set_type_hint(GTK_WINDOW(main_window), GDK_WINDOW_TYPE_HINT_DOCK);
-//     return JSValueMakeNull(context);
-// }
 
 static JSValueRef
 js_cb_exit(JSContextRef context,
@@ -274,6 +252,7 @@ main(int argc, char* argv[]) {
     g_free(start);
 
     WebDSWebKit::add_native_func("load_plugin", js_cb_load_plugin);
+    WebDSWebKit::add_native_func("resize_window", js_cb_resize_window);
     WebDSWebKit::add_native_func("get_env", js_cb_get_env);
     WebDSWebKit::add_native_func("exit", js_cb_exit);
     
