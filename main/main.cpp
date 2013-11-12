@@ -161,6 +161,42 @@ js_cb_resize_window(JSContextRef context,
     return JSValueMakeNull(context);
 }
 
+static JSValueRef
+js_cb_hide_window(JSContextRef context,
+                    JSObjectRef function,
+                    JSObjectRef self,
+                    size_t argc,
+                    const JSValueRef argv[],
+                    JSValueRef* exception)
+{
+    WebDSWebKit *wk = (WebDSWebKit *)JSObjectGetPrivate(function);
+    GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(wk->get_webview()));
+    if (toplevel != NULL)
+    {
+        gtk_widget_hide(toplevel);
+    }
+    return JSValueMakeNull(context);
+}
+
+static JSValueRef
+js_cb_show_window(JSContextRef context,
+                    JSObjectRef function,
+                    JSObjectRef self,
+                    size_t argc,
+                    const JSValueRef argv[],
+                    JSValueRef* exception)
+{
+    WebDSWebKit *wk = (WebDSWebKit *)JSObjectGetPrivate(function);
+    GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(wk->get_webview()));
+    if (toplevel != NULL)
+    {
+        gtk_widget_show(toplevel);
+        gtk_window_present(GTK_WINDOW(toplevel));
+    }
+    return JSValueMakeNull(context);
+}
+
+
 // (plugin_name, plugin_file_name)
 static JSValueRef
 js_cb_load_plugin(JSContextRef context,
@@ -195,28 +231,6 @@ js_cb_exit(JSContextRef context,
     return JSValueMakeNull(context);
 }
 
-// static gboolean
-// input_channel_in(GIOChannel *c, GIOCondition cond, gpointer data)
-// {
-//     gchar *line_buf;
-//     gsize  line_len;
-//     gsize  line_term;
-
-//     GIOStatus status = g_io_channel_read_line(c, &line_buf, &line_len, &line_term, NULL);
-    
-//     if (status == G_IO_STATUS_NORMAL)
-//     {
-//         sendWKEvent(line_buf);
-//         g_free(line_buf);
-//     }
-//     else if (status == G_IO_STATUS_EOF)
-//     {
-//         fprintf(stderr, "input closed\n");
-//     }
-    
-//     return status == G_IO_STATUS_EOF ? FALSE : TRUE;
-// }
-    
 int
 main(int argc, char* argv[]) {
     signal(SIGCHLD, SIG_IGN);
@@ -240,6 +254,8 @@ main(int argc, char* argv[]) {
     g_free(start);
 
     WebDSWebKit::add_native_func("load_plugin", js_cb_load_plugin);
+    WebDSWebKit::add_native_func("show_window", js_cb_show_window);
+    WebDSWebKit::add_native_func("hide_window", js_cb_hide_window);
     WebDSWebKit::add_native_func("resize_window", js_cb_resize_window);
     WebDSWebKit::add_native_func("get_env", js_cb_get_env);
     WebDSWebKit::add_native_func("exit", js_cb_exit);
