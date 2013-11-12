@@ -163,3 +163,14 @@ gboolean WebDSWebKit::_context_menu_cb(WebKitWebView       *web_view,
                                        gboolean             triggered_with_keyboard,
                                        gpointer             user_data)
 { return TRUE; }
+
+int WebDSWebKit::send_event(const string &data) {
+    WebKitDOMDocument *dom = webkit_web_view_get_dom_document(_webview);
+    WebKitDOMHTMLElement *ele = webkit_dom_document_get_body(dom);
+    if (ele)
+    {
+        WebKitDOMEvent  *event = webkit_dom_document_create_event(dom, "CustomEvent", NULL);
+        webkit_dom_event_init_event(event, NATIVE_EVENT_NAME, FALSE, TRUE); // The custom event should be canceled by the handler
+        webkit_dom_node_dispatch_event(WEBKIT_DOM_NODE(ele), event, NULL);
+    }
+}

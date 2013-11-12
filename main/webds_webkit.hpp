@@ -9,7 +9,8 @@
 #include <webkit/webkit.h>
 #include "plugin.h"
 
-#define NATIVE_FUNC_NAME "sys"
+#define NATIVE_FUNC_NAME  "sys"
+#define NATIVE_EVENT_NAME "sys_event"
 
 class WebDSWebKit {
 private:
@@ -58,6 +59,8 @@ public:
 
     static int add_native_func(const std::string &name, JSObjectCallAsFunctionCallback func);
     WebKitWebView *get_webview() const;
+    int send_event(const std::string &data);
+    
     WebDSWebKit();
     ~WebDSWebKit();
 };

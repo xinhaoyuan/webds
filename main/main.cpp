@@ -195,18 +195,6 @@ js_cb_exit(JSContextRef context,
     return JSValueMakeNull(context);
 }
 
-// static void sendWKEvent(char *line)
-// {
-//     WebKitDOMDocument *dom = webkit_web_view_get_dom_document(web_view);
-//     WebKitDOMHTMLElement *ele = webkit_dom_document_get_body(dom);
-//     if (ele)
-//     {
-//         WebKitDOMEvent  *event = webkit_dom_document_create_event(dom, "CustomEvent", NULL);
-//         webkit_dom_event_init_event(event, "sysWakeup", FALSE, TRUE); // The custom event should be canceled by the handler
-//         webkit_dom_node_dispatch_event(WEBKIT_DOM_NODE(ele), event, NULL);
-//     }
-// }
-
 // static gboolean
 // input_channel_in(GIOChannel *c, GIOCondition cond, gpointer data)
 // {
