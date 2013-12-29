@@ -14,7 +14,8 @@ WebDSLauncher::WebDSLauncher(const string &page_uri) {
     gtk_window_set_resizable(_window, FALSE);
     gtk_widget_set_can_focus(GTK_WIDGET(_window), TRUE);
     gtk_window_set_decorated(_window, FALSE);
-    gtk_window_set_position(_window, GTK_WIN_POS_CENTER);
+    gtk_window_set_gravity(_window, GDK_GRAVITY_CENTER);
+    gtk_window_set_position(_window, GTK_WIN_POS_CENTER_ALWAYS);
     
     if (visual == NULL || !gtk_widget_is_composited(GTK_WIDGET(_window)))
     {

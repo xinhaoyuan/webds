@@ -147,7 +147,7 @@ js_cb_resize_window(JSContextRef context,
                     const JSValueRef argv[],
                     JSValueRef* exception)
 {
-    WebDSWebKit *wk = (WebDSWebKit *)JSObjectGetPrivate(function);
+    WebDSWebKit *wk = (WebDSWebKit *)JSObjectGetPrivate(self);
     GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(wk->get_webview()));
     if (toplevel != NULL &&
         argc == 3 && JSValueIsNumber(context, argv[1]) && JSValueIsNumber(context, argv[2]))
@@ -164,13 +164,13 @@ js_cb_resize_window(JSContextRef context,
 
 static JSValueRef
 js_cb_hide_window(JSContextRef context,
-                    JSObjectRef function,
-                    JSObjectRef self,
-                    size_t argc,
-                    const JSValueRef argv[],
-                    JSValueRef* exception)
+                  JSObjectRef function,
+                  JSObjectRef self,
+                  size_t argc,
+                  const JSValueRef argv[],
+                  JSValueRef* exception)
 {
-    WebDSWebKit *wk = (WebDSWebKit *)JSObjectGetPrivate(function);
+    WebDSWebKit *wk = (WebDSWebKit *)JSObjectGetPrivate(self);
     GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(wk->get_webview()));
     if (toplevel != NULL)
     {
@@ -181,22 +181,33 @@ js_cb_hide_window(JSContextRef context,
 
 static JSValueRef
 js_cb_show_window(JSContextRef context,
-                    JSObjectRef function,
-                    JSObjectRef self,
-                    size_t argc,
-                    const JSValueRef argv[],
-                    JSValueRef* exception)
+                  JSObjectRef function,
+                  JSObjectRef self,
+                  size_t argc,
+                  const JSValueRef argv[],
+                  JSValueRef* exception)
 {
-    WebDSWebKit *wk = (WebDSWebKit *)JSObjectGetPrivate(function);
+    WebDSWebKit *wk = (WebDSWebKit *)JSObjectGetPrivate(self);
     GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(wk->get_webview()));
     if (toplevel != NULL)
-    {
         gtk_widget_show(toplevel);
-        gtk_window_present(GTK_WINDOW(toplevel));
-    }
     return JSValueMakeNull(context);
 }
 
+static JSValueRef
+js_cb_grab_focus(JSContextRef context,
+                 JSObjectRef function,
+                 JSObjectRef self,
+                 size_t argc,
+                 const JSValueRef argv[],
+                 JSValueRef* exception)
+{
+    WebDSWebKit *wk = (WebDSWebKit *)JSObjectGetPrivate(self);
+    GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(wk->get_webview()));
+    if (toplevel != NULL)
+        gtk_window_present(GTK_WINDOW(toplevel));
+    return JSValueMakeNull(context);
+}
 
 // (plugin_name, plugin_file_name)
 static JSValueRef
@@ -261,13 +272,14 @@ main(int argc, char* argv[]) {
 
     WebDSWebKit::add_native_func("load_plugin", js_cb_load_plugin);
     WebDSWebKit::add_native_func("show_window", js_cb_show_window);
+    WebDSWebKit::add_native_func("grab_focus", js_cb_grab_focus);
     WebDSWebKit::add_native_func("hide_window", js_cb_hide_window);
     WebDSWebKit::add_native_func("resize_window", js_cb_resize_window);
     WebDSWebKit::add_native_func("get_env", js_cb_get_env);
     WebDSWebKit::add_native_func("exit", js_cb_exit);
     
     WebDSDesktop *desktop = new WebDSDesktop(desktop_start_uri);
-    // WebDSLauncher *launcher = new WebDSLauncher(launcher_start_uri);
+    WebDSLauncher *launcher = new WebDSLauncher(launcher_start_uri);
     
     gtk_main();
     

@@ -1,0 +1,136 @@
+body {
+    display: block;
+    padding: 0px;
+    margin: 0px;
+    font-size: 10pt;
+    font-family: consolas, monospace;
+    text-align: left;
+    background: transparent;
+}
+
+/* Legacy style */
+
+/* #all { */
+/*     display: block; */
+/* } */
+
+/* #launcher-container { */
+/*     text-align: left; */
+/*     display: inline-block; */
+/*     background: black; */
+/*     color: white; */
+/* } */
+
+/* #launcher-arguments-container {    */
+/*     padding: 4px; */
+/*     white-space: nowrap; */
+/* } */
+
+/* Current style */
+
+#all {
+    display: block;
+    height: 300px;
+    width: 600px;
+    text-align: center;
+    overflow: hidden;
+}
+
+#all:before {
+    height: 100%;
+    width: 0px;
+    vertical-align: middle;
+    display: inline-block;
+    content: "";
+}
+
+#launcher-container {
+    vertical-align: middle;
+    text-align: left;
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+}
+
+#launcher-line-container {
+    white-space: nowrap;
+    padding: 4px;
+}
+
+#launcher-arguments-container {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.launcher-argument { 
+    display: inline-block; 
+    padding: 2px;
+    margin-left: 4px;
+    white-space: pre;
+    border-bottom: 2px solid #acf;
+}
+
+#launcher-indicator {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#launcher-line-container[smart-type="Cmd"] #launcher-indicator:before {
+    content: "Cmd";
+}
+
+#launcher-line-container[smart-type="JSEval"] #launcher-indicator:before {
+    content: "JavaScript";
+}
+
+#launcher-line-container[smart-type="Web"] #launcher-indicator:before {
+    content: "Web";
+}
+
+#launcher-line-container[smart-type="Email"] #launcher-indicator:before {
+    content: "E-mail";
+}
+
+.launcher-argument[contenteditable=true]
+{
+    border-bottom: 2px solid #f94;
+}
+
+.launcher-argument:empty:before
+{
+    color: #666;
+    content: "EMPTY";
+}
+
+#launcher-completion-container {
+    display: none;
+    text-align: left;
+    max-height: 160px;
+    overflow: hidden;
+}
+
+#launcher-completion-container.show {
+    display: block;
+    padding: 2px;
+}
+
+/* #launcher-completion-container:before { */
+/*     display: block; */
+/*     margin-bottom: 2px; */
+/*     white-space: pre; */
+/*     content: "Completion:"; */
+/*     color: white; */
+/* } */
+
+.launcher-completion {
+    display: block;
+    padding: 2px;
+    white-space: pre;
+}
+
+.launcher-completion.selected {
+    color: black;
+    background: #aaa;
+}
+
+:focus { outline: none; }

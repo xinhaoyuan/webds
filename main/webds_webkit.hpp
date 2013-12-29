@@ -9,13 +9,16 @@
 #include <webkit/webkit.h>
 #include "plugin.h"
 
-#define NATIVE_FUNC_NAME  "sys"
+#define NATIVE_OBJECT_NAME  "sys"
+#define NATIVE_FUNC_NAME    "call"
 #define NATIVE_EVENT_NAME "sys_event"
 
 class WebDSWebKit {
 private:
     WebKitWebView     *_webview;
     JSGlobalContextRef _js_native_context;
+    JSClassRef         _js_native_class;
+    JSObjectRef        _js_native_object;
     JSObjectRef        _js_native_func;
     bool               _page_loaded;
 

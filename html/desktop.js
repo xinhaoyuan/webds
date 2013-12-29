@@ -3,11 +3,11 @@ var di = {}
 function copyToClipboard(s) {
     if (typeof s != "string") return;
 
-    args = [sys("get_env", "WEBDS_PATH") + "/bin/clip-put", s];
-    sys("cmd_output", args.length, args, "");
+    args = [sys.call("get_env", "WEBDS_PATH") + "/bin/clip-put", s];
+    sys.call("cmd", args.length, args);
 
-    args = [sys("get_env", "WEBDS_PATH") + "/bin/notify-desktop", s + " copied to clipboard"];
-    sys("cmd_output", args.length, args, "");
+    args = [sys.call("get_env", "WEBDS_PATH") + "/bin/notify-desktop", s + " copied to clipboard"];
+    sys.call("cmd", args.length, args);
 }
 
 di.change_sort_method = function() {
@@ -26,11 +26,11 @@ di.change_sort_method = function() {
 di.update = function() {
     var cm = $('#di-sort-by').text();
     if (cm != "name" && cm != "date" && cm != "type") cm = "name";
-    var args = [sys("get_env", "WEBDS_PATH") + "/bin/ls-by-" + cm, sys("get_env", "WEBDS_DESKTOP_PATH")];
+    var args = [sys.call("get_env", "WEBDS_PATH") + "/bin/ls-by-" + cm, sys.call("get_env", "WEBDS_DESKTOP_PATH")];
     var r;
 
     try {
-        r = sys("cmd_output", args.length, args, "")
+        r = sys.call("cmd_output", args.length, args, "")
         r = JSON.parse(r);
     } catch (e) { r = null; }
 
@@ -43,8 +43,7 @@ di.update = function() {
 }
 
 $(document).ready(function() {
-    if (!sys("load_plugin", "cmd", "libwebdsplugin-cmd.so"))
-    {
+    if (!sys.call("load_plugin", "cmd", "libwebdsplugin-cmd.so")) {
         console.log("Cannot load the cmd plugin");
     }
 

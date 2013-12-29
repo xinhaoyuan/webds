@@ -10,6 +10,7 @@ build:
 
 package: all
 	${V}mkdir -p package/webds-local
+	${V}mkdir -p package/webds-local/dirlist_cache
 	${V}cp -r html package/webds-local/
 	${V}cp -r bin package/webds-local/
 	${V}cp    build/main/main package/webds-local/

@@ -16,17 +16,26 @@ WebDSWebKit::WebDSWebKit() {
         webkit_web_frame_get_global_context(webkit_web_view_get_main_frame(_webview));
 
     JSStringRef native_func_name;
-    _js_native_context = JSGlobalContextCreateInGroup(JSContextGetGroup(js_global_context), NULL);
-    _js_native_func = JSObjectMakeFunctionWithCallback(_js_native_context, NULL, _js_native_call_entry);
-    JSObjectSetPrivate(_js_native_func, this);
-
+    JSStringRef native_object_name;
+    native_object_name = JSStringCreateWithUTF8CString(NATIVE_OBJECT_NAME);
     native_func_name = JSStringCreateWithUTF8CString(NATIVE_FUNC_NAME);
+
+    _js_native_context = JSGlobalContextCreateInGroup(JSContextGetGroup(js_global_context), NULL);
+    _js_native_class = JSClassCreate(&kJSClassDefinitionEmpty);
+    _js_native_object = JSObjectMake(_js_native_context, _js_native_class, this);
+    _js_native_func = JSObjectMakeFunctionWithCallback(_js_native_context, NULL, _js_native_call_entry);
     JSObjectSetProperty(_js_native_context,
-                        JSContextGetGlobalObject(_js_native_context),
+                        _js_native_object,
                         native_func_name,
                         _js_native_func,
                         0, NULL);
+    JSObjectSetProperty(_js_native_context,
+                        JSContextGetGlobalObject(_js_native_context),
+                        native_object_name,
+                        _js_native_object,
+                        0, NULL);
     JSStringRelease(native_func_name);
+    JSStringRelease(native_object_name);
 
     g_signal_connect(webkit_web_view_get_main_frame(_webview), "notify::load-status",
                      G_CALLBACK(_load_status_cb), this);
@@ -49,13 +58,13 @@ WebDSWebKit::_load_status_cb(WebKitWebFrame *frame,
     if (webkit_web_frame_get_load_status(frame) == WEBKIT_LOAD_COMMITTED)
     {
         JSStringRef name;
-        name = JSStringCreateWithUTF8CString(NATIVE_FUNC_NAME);
+        name = JSStringCreateWithUTF8CString(NATIVE_OBJECT_NAME);
         _this->_js_native_context = webkit_web_frame_get_global_context(frame);
         
         JSObjectSetProperty(_this->_js_native_context,
                             JSContextGetGlobalObject(_this->_js_native_context),
                             name,
-                            _this->_js_native_func,
+                            _this->_js_native_object,
                             0, NULL);
         JSStringRelease(name);
     }
@@ -85,13 +94,13 @@ void WebDSWebKit::_native_func_map_unlock() { G_UNLOCK(_native_func_map_lock); }
 
 JSValueRef
 WebDSWebKit::_js_native_call_entry(JSContextRef context,
-                                       JSObjectRef function,
-                                       JSObjectRef self,
-                                       size_t argc,
-                                       const JSValueRef argv[],
-                                       JSValueRef* exception) {
+                                   JSObjectRef function,
+                                   JSObjectRef self,
+                                   size_t argc,
+                                   const JSValueRef argv[],
+                                   JSValueRef* exception) {
     // no need to get ``this'' object now
-    // WebDSWebKit *_this = (WebDSWebKit *)JSObjectGetPrivate(function);
+    // WebDSWebKit *_this = (WebDSWebKit *)JSObjectGetPrivate(self);
     
     if (argc < 1 || !JSValueIsString(context, argv[0])) return JSValueMakeNull(context);
     string func_name;
