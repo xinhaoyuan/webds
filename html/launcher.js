@@ -455,6 +455,12 @@ $(document).ready(function() {
         console.log("Cannot load the dirlist plugin");
     }
 
+    if (!sys.call("load_plugin", "messager", "libwebdsplugin-messager.so")) {
+        console.log("Cannot load the messager plguin");
+    }
+
+    sys.call("messager_register_listener", "/tmp/msg", "message");
+
     $("body").click(function() {
         sys.call("grab_focus");
     });
@@ -484,3 +490,7 @@ $(document).ready(function() {
 
     rootContainer = document.getElementById("all");
 });
+
+function message(msg) {
+    console.log("message:" + msg);
+}

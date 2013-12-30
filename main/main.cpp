@@ -56,8 +56,8 @@ load_plugin(const char *plugin_name, const char *plugin_file_name)
     if (plugin_handle_map.find(plugin_name) != plugin_handle_map.end())
     {
         G_UNLOCK(plugin_lock);
-        fprintf(stderr, "Failed, already loaded\n");
-        goto failed;
+        fprintf(stderr, "Already loaded\n");
+        return 0;
     }
     plugin_handle_map[plugin_name] = handle;
     G_UNLOCK(plugin_lock);
