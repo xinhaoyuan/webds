@@ -11,7 +11,7 @@
 
 #define NATIVE_OBJECT_NAME  "sys"
 #define NATIVE_FUNC_NAME    "call"
-#define NATIVE_EVENT_NAME "sys_event"
+#define NATIVE_EVENT_NAME   "sys_event"
 
 class WebDSWebKit {
 private:
