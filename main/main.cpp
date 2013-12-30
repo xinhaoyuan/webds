@@ -16,11 +16,11 @@
 #include <map>
 #include <string>
 
-#include "plugin.h"
-#include "util.hpp"
-#include "webds_webkit.hpp"
-#include "webds_desktop.hpp"
-#include "webds_launcher.hpp"
+#include <plugin.h>
+#include <util.hpp>
+#include <webds_webkit.hpp>
+#include <webds_desktop.hpp>
+#include <webds_launcher.hpp>
 
 using namespace std;
 
