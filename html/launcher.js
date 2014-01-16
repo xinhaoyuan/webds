@@ -10,6 +10,7 @@ var regexWebExclude = /[^\/]+(\-?([0-9]+\.)*[0-9]+|\.sh|\.py|\.bin)$/;
 var headerCache = "";
 var updateIntervalV;
 var rootContainer;
+var message_callback;
 
 var currentCompletionIndex = null;
 
@@ -49,12 +50,12 @@ function updateInterval()
     var width = rootContainer.offsetWidth;
     var height = rootContainer.offsetHeight;
 
-    // if (width != oldWidth || height != oldHeight)
-    // {
-    //     oldWidth = width;
-    //     oldHeight = height;
-    //     sys.call("resize_window", width, height);
-    // }
+    if (width != oldWidth || height != oldHeight)
+    {
+        oldWidth = width;
+        oldHeight = height;
+        sys.call("resize_window", width, height);
+    }
 }
 
 function SetCurrentArgumentText(txt)
@@ -459,7 +460,7 @@ $(document).ready(function() {
         console.log("Cannot load the messager plguin");
     }
 
-    sys.call("messager_register_listener", "/tmp/msg", "message");
+    sys.call("messager_register_listener", "/tmp/webds_launcher", "message_callback");
 
     $("body").click(function() {
         sys.call("grab_focus");
@@ -489,8 +490,7 @@ $(document).ready(function() {
     })
 
     rootContainer = document.getElementById("all");
+    message_callback = function() {
+        Show();
+    }
 });
-
-function message(msg) {
-    console.log("message:" + msg);
-}

@@ -152,8 +152,8 @@ js_cb_resize_window(JSContextRef context,
     if (toplevel != NULL &&
         argc == 3 && JSValueIsNumber(context, argv[1]) && JSValueIsNumber(context, argv[2]))
     {
-        double widthF = JSValueToNumber(context, argv[0], NULL);
-        double heightF = JSValueToNumber(context, argv[1], NULL);
+        double widthF = JSValueToNumber(context, argv[1], NULL);
+        double heightF = JSValueToNumber(context, argv[2], NULL);
         int width = (int)widthF;
         int height = (int)heightF;
         fprintf(stderr, "SET SIZE %d %d\n", width, height);

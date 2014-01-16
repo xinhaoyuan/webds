@@ -31,7 +31,8 @@ WebDSLauncher::WebDSLauncher(const string &page_uri) {
     gtk_widget_override_background_color(GTK_WIDGET(_window), GTK_STATE_FLAG_NORMAL, &bg);
     
     gtk_container_add(GTK_CONTAINER(_window), GTK_WIDGET(_wk->get_webview()));
-    
+    gtk_widget_show(GTK_WIDGET(_wk->get_webview()));
+
     gtk_widget_grab_focus(GTK_WIDGET(_wk->get_webview()));
     webkit_web_view_load_uri(_wk->get_webview(), page_uri.c_str());
 }
