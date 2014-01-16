@@ -5,23 +5,38 @@ export WEBDS_DESKTOP_PAGE=${local_path}/webds-local/html/desktop.html
 export WEBDS_LAUNCHER_PAGE=${local_path}/webds-local/html/launcher.html
 export WEBDS_PATH=${local_path}/webds-local
 export WEBDS_DESKTOP_PATH=$HOME/.links
+export WEBDS_LAUNCHER_UNIX_SOCKET=/tmp/webds_launcher
 export LD_LIBRARY_PATH="${local_path}/webds-local/:${LD_LIBRARY_PATH}"
 
 WD=`cd $(dirname $0); pwd`
 LOCK_DIR="/tmp/.webds.lock"
 
-while ! mkdir $LOCK_DIR 2>/dev/null; do
-    while [ ! -e $LOCK_DIR/pid -a -d $LOCK_DIR ]; do sleep .5; done
-    _PID=`cat $LOCK_DIR/pid 2>/dev/null`
-    [ -n "$_PID" ] && kill $_PID 2>/dev/null
-done
+OP=$1; shift
 
-if [ "$1" = "exit" ]; then rmdir ${LOCK_DIR}; exit 0; fi
-
-(
-    ${local_path}/webds-local/main &
-    _PID=$!
-    echo $_PID > $LOCK_DIR/pid
-    trap 'rm -rf "$LOCK_DIR"' 0
-    wait $_PID 2>/dev/null
-) &
+if [ -z "$OP" ]; then 
+    $0 exit
+    $0 start
+elif [ "$OP" = "exit" ]; then
+    while ! mkdir $LOCK_DIR 2>/dev/null; do
+        while [ ! -e $LOCK_DIR/pid -a -d $LOCK_DIR ]; do sleep .5; done
+        _PID=`cat $LOCK_DIR/pid 2>/dev/null`
+        [ -n "$_PID" ] && kill $_PID 2>/dev/null
+    done
+    rmdir $LOCK_DIR
+elif [ "$OP" = "start" ]; then
+    if mkdir $LOCK_DIR 2>/dev/null; then 
+        (
+            ${local_path}/webds-local/main &
+            _PID=$!
+            echo $_PID > $LOCK_DIR/pid
+            trap '{ rm -rf $LOCK_DIR; unlink $WEBDS_LAUNCHER_UNIX_SOCKET; }' 0
+            wait $_PID 2>/dev/null
+        ) &
+    fi
+elif [ "$OP" = "open-launcher" ]; then
+    while [ ! -e $WEBDS_LAUNCHER_UNIX_SOCKET ]; do
+        $0 start
+        sleep .5
+    done
+    echo -n | socat STDIO UNIX-CONNECT:$WEBDS_LAUNCHER_UNIX_SOCKET
+fi

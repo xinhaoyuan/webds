@@ -156,7 +156,6 @@ js_cb_resize_window(JSContextRef context,
         double heightF = JSValueToNumber(context, argv[2], NULL);
         int width = (int)widthF;
         int height = (int)heightF;
-        fprintf(stderr, "SET SIZE %d %d\n", width, height);
         gtk_widget_set_size_request(toplevel, width, height);
     }
     return JSValueMakeNull(context);

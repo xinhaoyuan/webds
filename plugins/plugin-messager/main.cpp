@@ -74,7 +74,6 @@ _process_message(GIOChannel *source,
                 script << "\");";
                 WebKitWebView *wv = msg->messager->wk->get_webview();
                 string eval_str = script.str();
-                fprintf(stderr, "eval: %s\n", eval_str.c_str());
                 webkit_web_view_execute_script(wv, eval_str.c_str());
                 goto eom;
             } else if (s == G_IO_STATUS_AGAIN) {
