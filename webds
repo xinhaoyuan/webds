@@ -38,5 +38,5 @@ elif [ "$OP" = "open-launcher" ]; then
         $0 start
         sleep .5
     done
-    echo -n | socat STDIO UNIX-CONNECT:$WEBDS_LAUNCHER_UNIX_SOCKET
+    echo -n | socat STDIN UNIX-CONNECT:$WEBDS_LAUNCHER_UNIX_SOCKET
 fi

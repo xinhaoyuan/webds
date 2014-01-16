@@ -65,13 +65,13 @@ _process_message(GIOChannel *source,
             if (s > 0) msg->msg_buffer << string(msg->read_buffer, size);
             if (s == G_IO_STATUS_EOF) {
                 ostringstream script;
-                script << msg->messager->callback_name << "(\"";
+                script << "setTimeout(function(){" << msg->messager->callback_name << "(\"";
                 string msg_text = msg->msg_buffer.str();
                 for (int i = 0; i < msg_text.length(); ++ i) {
                     if (msg_text[i] == '"' || msg_text[i] == '\n') script << '\\';
                     script << msg_text[i];
                 }
-                script << "\");";
+                script << "\")},0);";
                 WebKitWebView *wv = msg->messager->wk->get_webview();
                 string eval_str = script.str();
                 webkit_web_view_execute_script(wv, eval_str.c_str());
